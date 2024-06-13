@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets/3.7.56">
+    <PropertyGroup>
+        <PackageId>SubHobo.Thunderstore.BuildTargets.Extensions.ReadmeGeneration</PackageId>
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Authors>SubHobo</Authors>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://www.github.com/bls220/SubHobo.Thunderstore.BuildTargets.Extensions.ReadmeGeneration</RepositoryUrl>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+        <Description>This package is an extension to SubHobo.Thunderstore.BuildTargets to allow generation of the Thunderstore package README</Description>
+        <Version>$(NuGetPackageVersion)</Version>
+        <PackageTags>thunderstore;mod;build;target;msbuild;readme</PackageTags>
+        <PackageType>Dependency</PackageType>
+
+        <TargetFramework>net8.0</TargetFramework>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <NoBuild>true</NoBuild>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageDependencies>
+            <dependency id="SubHobo.Thunderstore.BuildTargets" version="1.*" />
+        </PackageDependencies>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\LICENSE" Pack="True" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="build\SubHobo.Thunderstore.BuildTargets.Extensions.ReadmeGeneration.targets" Pack="True" PackagePath="\" />
+      <None Update="build\SubHobo.Thunderstore.BuildTargets.Extensions.ReadmeGeneration.props" Pack="True" PackagePath="\" />
+      <None Update="readme.txt" Pack="True" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>

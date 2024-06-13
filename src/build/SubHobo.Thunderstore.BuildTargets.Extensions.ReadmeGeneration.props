@@ -1,0 +1,9 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+        <PropertyGroup>
+            <!--
+                This is set to two NewLines as it is reasonable to expect each section starts on a new line
+                and a fully blank line is required by markdown to do so.
+            -->
+            <ReadmeSectionSeparator Condition="'$(ReadmeSectionSeparator)' == ''">$([System.Environment]::NewLine)$([System.Environment]::NewLine)</ReadmeSectionSeparator>
+        </PropertyGroup>
+</Project>

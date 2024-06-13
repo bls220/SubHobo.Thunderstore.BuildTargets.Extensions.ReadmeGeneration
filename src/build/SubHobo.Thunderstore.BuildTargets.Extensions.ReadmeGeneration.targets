@@ -1,0 +1,19 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="_GenerateReadme" BeforeTargets="PackageForThunderStore" Inputs="$(MSBuildAllProjects);@(ReadmeSection)" Outputs="$(OutputPath)README.md">
+        <!-- Read contents from files. Content is wrapped in xml tags and CDATA so that we can interpolate any build properties inside -->
+        <XmlPeek
+            Condition="Exists(@(ReadmeSection))"
+            XmlContent="&lt;root&gt;&lt;![CDATA[$([System.IO.File]::ReadAllText(%(ReadmeSection.Identity)))]]&gt;&lt;/root&gt;"
+            Query="/root/text()"
+        >
+            <Output TaskParameter="Result" ItemName="_Readme_ReadmeSections" />
+        </XmlPeek>
+
+        <ItemGroup>
+            <_ReadmeSection_Expanded Include="%(_Readme_ReadmeSections.Identity)" Content="%(_Readme_ReadmeSections.Identity)" KeepDuplicates="true"/>
+        </ItemGroup>
+
+        <Warning Condition="'@(_Readme_ReadmeSections)' == ''" Text="No ReadmeSections were defined. Your README.md will be empty."/>
+        <WriteLinesToFile Lines="@(_ReadmeSection_Expanded->'%(Content)','$(ReadmeSectionSeparator)')" File="$(OutputPath)README.md" WriteOnlyWhenDifferent="true" Overwrite="true"/>
+    </Target>
+</Project>

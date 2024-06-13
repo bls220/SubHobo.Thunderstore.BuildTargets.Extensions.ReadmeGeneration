@@ -1,0 +1,34 @@
+﻿<Project>
+    <!-- Disable nupkg generation before running pack -->
+    <Target Name="__DisablePacking" BeforeTargets="GenerateNuspec" DependsOnTargets="GetBuildVersion" Condition="$(NuspecFile) == ''">
+        <PropertyGroup>
+            <ContinuePackingAfterGeneratingNuspec>false</ContinuePackingAfterGeneratingNuspec>
+        </PropertyGroup>
+    </Target>
+
+    <!-- Modify the generated nuspec file and rerun the pack target -->
+    <Target Name="__EnablePackingAndInjectDependencies" AfterTargets="Pack" Condition="$(NuspecFile) == ''">
+        <!-- Get the nuspec file name -->
+        <PropertyGroup>
+            <__NuspecFileName>$([System.IO.Path]::Combine("$(NuspecOutputAbsolutePath)","$(PackageId).$(PackageVersion).nuspec"))</__NuspecFileName>
+        </PropertyGroup>
+
+        <!-- Poke them back in -->
+        <XmlPoke XmlInputPath="$(__NuspecFileName)"
+                 Value="$(PackageDependencies)"
+                 Query="/n:package/n:metadata/n:dependencies"
+                 Namespaces="&lt;Namespace Prefix='n' Uri='http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd' /&gt;">
+        </XmlPoke>
+
+        <!-- call the pack operation again -->
+        <PropertyGroup>
+            <ContinuePackingAfterGeneratingNuspec>true</ContinuePackingAfterGeneratingNuspec>
+        </PropertyGroup>
+
+        <Msbuild
+          Projects="$(MSBuildProjectFullPath)"
+          Targets="Pack"
+          Properties="NuspecFile=$(__NuspecFileName);NoPackageAnalysis=true">
+        </Msbuild>
+     </Target>
+</Project>
